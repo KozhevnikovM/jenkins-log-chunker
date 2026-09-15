@@ -9,9 +9,19 @@ To overcome this, you have access to a local Python tool called `jenkinslog.py` 
 Whenever the user asks you to analyze a Jenkins log file:
 
 1. **Do NOT try to `cat` or read the entire file directly.**
-2. Instead, use your shell execution capabilities to run the chunker script provided in this skill package:
+2. **Fetch and Chunk the Log**
+   If the user provides a local file path, use your shell execution capabilities to run the chunker script provided in this skill package:
    ```bash
    python3 scripts/jenkinslog.py --max-tokens 8000 <path-to-jenkins-log> > chunks.jsonl
+   ```
+   
+   If the user provides a Jenkins build URL (or if you need to fetch it from the Jenkins API), use `curl` to fetch the `consoleText` and pipe it directly to the chunker. Ask the user for credentials if authentication is required.
+   ```bash
+   # Example without authentication
+   curl -s "$JENKINS_URL/job/my-job/123/consoleText" | python3 scripts/jenkinslog.py --max-tokens 8000 > chunks.jsonl
+   
+   # Example with authentication
+   curl -s -u "$JENKINS_USER:$JENKINS_TOKEN" "$JENKINS_URL/job/my-job/123/consoleText" | python3 scripts/jenkinslog.py --max-tokens 8000 > chunks.jsonl
    ```
 3. **Filter and Search the Chunks:**
    The tool outputs JSONL. Each line contains a log segment and metadata like `stage`, `step`, `command`, `workload` (e.g., docker, npm), and `docker_operation`.

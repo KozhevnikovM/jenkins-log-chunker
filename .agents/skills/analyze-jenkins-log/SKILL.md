@@ -10,11 +10,19 @@ This skill helps you process and analyze large Jenkins Pipeline logs using the `
 
 ## Instructions
 
-1. **Run the Chunker**
-   Execute the `jenkinslog.py` script on the target log file. You can find the script in the root of this repository.
-   
+1. **Fetch and Chunk the Log**
+   If the user provides a local file path, run the script against it. You can find the script in the root of this repository.
    ```bash
    python3 jenkinslog.py --max-tokens 8000 <path-to-jenkins-log> > chunks.jsonl
+   ```
+   
+   If the user provides a Jenkins build URL (or if you need to fetch it from the Jenkins API), use `curl` to fetch the `consoleText` and pipe it directly to the chunker. Ask the user for credentials if authentication is required.
+   ```bash
+   # Example without authentication
+   curl -s "$JENKINS_URL/job/my-job/123/consoleText" | python3 jenkinslog.py --max-tokens 8000 > chunks.jsonl
+   
+   # Example with authentication
+   curl -s -u "$JENKINS_USER:$JENKINS_TOKEN" "$JENKINS_URL/job/my-job/123/consoleText" | python3 jenkinslog.py --max-tokens 8000 > chunks.jsonl
    ```
 
 2. **Filter the Chunks**
