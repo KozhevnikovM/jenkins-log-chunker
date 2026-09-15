@@ -1,0 +1,13 @@
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] sh
++ npm test
+
+> project@1.0.0 test
+> jest
+
+FAIL src/foo.test.js
+  ● Test suite failed to run
+    TypeError: Cannot read property 'foo' of undefined
+
+npm ERR! Test failed.  See above for more details.

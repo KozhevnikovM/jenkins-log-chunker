@@ -1,0 +1,11 @@
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] sh
++ python3 deploy.py
+Deploying...
+Traceback (most recent call last):
+  File "deploy.py", line 42, in <module>
+    main()
+  File "deploy.py", line 12, in main
+    raise ValueError("Missing config")
+ValueError: Missing config
